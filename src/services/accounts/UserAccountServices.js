@@ -14,11 +14,6 @@ class UserAccountServices {
         const {code, calculateDate} = await generateCode(5);
 
         const _user = new User( {
-            avatar: " ",
-            address: " ",
-            nit: " ",
-            phones: " ",
-            coordinates: " ",
             name: name,
             email: email,
             password: hashedPassword,
