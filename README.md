@@ -9,7 +9,8 @@ As we know there are many approaches for write clean code, for instance: clean a
 
 These aspects can be handle by programing using three layers as below.
 
-**image here **
+<img width="568" alt="layared" src="https://user-images.githubusercontent.com/20213215/108635085-d24f2d80-7442-11eb-8da8-9acbeb4ee62e.png">
+
 
 ## Folder Structured.
 After describe our approach, we are going to modularize our project 
@@ -48,7 +49,7 @@ src
 
 Infrastructure in our project.
    
-**image her**
+<img width="772" alt="arcitecture" src="https://user-images.githubusercontent.com/20213215/108635121-20fcc780-7443-11eb-9eec-96b66b1af93e.png">
 
 ## Environment setup
 
