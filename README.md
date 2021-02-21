@@ -48,8 +48,8 @@ src
 - Firebase to send notifications
 
 Infrastructure in our project.
-   
-<img width="772" alt="arcitecture" src="https://user-images.githubusercontent.com/20213215/108635121-20fcc780-7443-11eb-9eec-96b66b1af93e.png">
+
+<img width="772" alt="Screen Shot 2021-02-21 at 12 53 33 PM" src="https://user-images.githubusercontent.com/20213215/108635208-d891d980-7443-11eb-82a3-c4f151517211.png">
 
 ## Environment setup
 
