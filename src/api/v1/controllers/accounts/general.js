@@ -1,27 +1,11 @@
-const GeneralAccountServices = require('../../../../services/accounts/GeneralAccountServices');
+const GeneralAccountServices = require('../../../../services/servicesUsingMongoose/accounts/GeneralAccountServices');
 const resendCodeValidationRules = require('../../validators/accounts/resendCode');
 const validate = require('../../validators/validate');
-const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
 const jwt = require('../../../../scripts/utils/jwt');
 
 function generalAccounts(router) {
     const generalAccountServices = new GeneralAccountServices();
-
-    router.post('/accounts/verify-emails',[confirmAccountValidationRules()], validate,async function (req, res) {
-        const {body: user } = req;
-        const { data, success, status } = await generalAccountServices.verifyEmail({user});
-        if (success) {
-            return res.status(status).json({
-                success: true,
-                message: data
-            })
-        }
-        return res.status(status).json({
-            success: false,
-            message: data
-        })
-    });
 
     router.post('/accounts/resend-code',[resendCodeValidationRules()],validate, async function(req, res) {
         const {body: user } = req;
@@ -59,10 +43,7 @@ function generalAccounts(router) {
         let token = req.params.token;
         let verify = await jwt.verifyToken(token);
         if (verify) {
-            return res.status(200).json({
-                success: true,
-                message: "Token valido",
-            })
+            return res.render('')
         }
 
         return res.status(401).json( {

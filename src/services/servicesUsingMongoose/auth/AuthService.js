@@ -1,6 +1,6 @@
-const User = require('../../models/mongoose/user');
-const jwt = require('../../scripts/utils/jwt');
-const hasPassword = require('../../scripts/utils/hasPassword');
+const User = require('../../../models/mongoose/user');
+const jwt = require('../../../scripts/utils/jwt');
+const hasPassword = require('../../../scripts/utils/hasPassword');
 const {saveToken } = require('./SecurityTokenServices');
 
 class AuthService {
@@ -42,7 +42,7 @@ class AuthService {
 
         }catch (err) {
             return {
-                status: 200,
+                status: 500,
                 data: err
             }
         }

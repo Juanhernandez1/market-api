@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs =  require('fs')
 const jwt = require('jsonwebtoken')
 const path = require('path');
+const {client,googleAppId } = require('../../config/oauth2/index');
 
 const privateKey = fs.readFileSync(path.resolve(__dirname, "../../../private.key"),'utf-8');
 const publicKey = fs.readFileSync(path.resolve(__dirname, "../../../public.key"),'utf-8');
@@ -31,9 +32,26 @@ async function decodePayload(token)  {
     return decoded.payload
 }
 
+async function verifyGoogleSignUpToken(token) {
+    try {
+        const  verify = await client.verifyIdToken({ idToken: token, audience:googleAppId});
+        const payload = verify.getPayload();
+        return {
+            success: true,
+            payload: payload
+        }
+    } catch (err) {
+        return {
+            success: false,
+            payload: null
+        }
+    }
+}
+
 module.exports = {
     createToken,
     verifyToken,
-    decodePayload
+    decodePayload,
+    verifyGoogleSignUpToken
 }
 

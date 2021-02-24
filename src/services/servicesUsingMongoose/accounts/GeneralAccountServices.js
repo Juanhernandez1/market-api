@@ -1,54 +1,14 @@
-const User = require('../../models/mongoose/user');
-const eventEmitter = require('../../scripts/utils/events');
-const jwt = require('../../scripts/utils/jwt');
-const hasPassword = require('../../scripts/utils/hasPassword');
-const mailSubscriber = require('../../subscribers/user/mail');
-const generateCode = require('../../scripts/codeEmailVerify');
+const User = require('../../../models/mongoose/user');
+const eventEmitter = require('../../../scripts/utils/events');
+const jwt = require('../../../scripts/utils/jwt');
+const hasPassword = require('../../../scripts/utils/hasPassword');
+const mailSubscriber = require('../../../subscribers/user/mail');
+const generateCode = require('../../../scripts/codeEmailVerify');
 mailSubscriber(eventEmitter);
 
 
 class GeneralAccountServices {
     constructor() {}
-
-    async verifyEmail({user}) {
-        let now = Date.now();
-        let date = 0;
-        const {email, code } = user;
-
-
-        try {
-            const findUser = await User.find({ email:email , code_to_verify_email: code }).exec();
-            if (findUser.length === 0 ) {
-                return {
-                    status: 404,
-                    success: false,
-                    data: "La cuenta de usuario no existe !"
-                }
-            }
-
-            date = parseInt(findUser[0].send_at);
-            if (now < date) {
-                const updateUser = await User.findByIdAndUpdate(findUser[0].id, {email_verified: true})
-                return {
-                    status: 200,
-                    success: true,
-                    data: "La cuenta fue verificada, por favor inicia sesión"
-                }
-            }
-
-            return {
-                status: 422,
-                success: false,
-                data: "El código ha expirado, intenta enviar otro codigo nuevamente"
-            }
-        }catch (err) {
-            return {
-                status: 500,
-                success: false,
-                data: err
-            }
-        }
-    }
 
     async resendCode({user}) {
         const {email } = user;
@@ -63,7 +23,7 @@ class GeneralAccountServices {
                 }
             }
 
-            if (findUser[0].email_verified === true) {
+            if (findUser[0].is_email_verified === true) {
                 return {
                     status: 200,
                     success: false,
@@ -99,7 +59,7 @@ class GeneralAccountServices {
                     data: "La cuenta de usuario no existe !"
                 }
             }
-            if (findUser[0].email_verified === false) {
+            if (findUser[0].is_email_verified === false) {
                 return {
                     status: 200,
                     success: false,

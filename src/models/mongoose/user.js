@@ -10,6 +10,7 @@ let userRoles = {
 let userSchema = new Schema({
     avatar: {
         type: String,
+        default: null
     },
     email:{
         type: String,
@@ -31,17 +32,20 @@ let userSchema = new Schema({
         required: [true, "Password is required !"]
     },
     address: {
-        type: String
+        type: String,
+        default: null
     },
     nit:  {
         type: String,
-        unique: true,
+        default:  null
     },
     phones: {
         type: String,
+        default: null
     },
     coordinates: {
         type: String,
+        default: null
     },
     role: {
         type: String,
@@ -60,15 +64,15 @@ let userSchema = new Schema({
     send_at :{
         type: String
     },
-    email_verified:{
+    is_email_verified:{
         type: Boolean,
         default: false,
     },
-    status:{
+    is_active:{
         type: Boolean,
         default: true
     },
-    oauth2:{
+    is_oauth2:{
         type: Boolean,
         default: false
     }

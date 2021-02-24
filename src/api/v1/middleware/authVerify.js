@@ -1,5 +1,6 @@
 const jwt = require('../../../scripts/utils/jwt');
-const { tokenIsActive } = require('../../../services/auth/SecurityTokenServices');
+const { tokenIsActive } = require('../../../services/servicesUsingMongoose/auth/SecurityTokenServices');
+
 let authVerify = async (req,res, next) => {
     let _token = req.get('Authorization').split(' ');
     let isValidToken = await jwt.verifyToken(_token[1]);
@@ -11,7 +12,8 @@ let authVerify = async (req,res, next) => {
             message: "El token ha expirado !."
         })
     }
-    req.user = jwt.decodePayload(_token[1]).user
+    let { user } = await jwt.decodePayload(_token[1]);
+    req.user = user
     next()
 }
 

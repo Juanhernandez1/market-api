@@ -1,6 +1,6 @@
 const config = require('./config/index');
 const compression = require('compression');
-const mongooseConnection = require('./services/database/mongoose')
+const mongooseConnection = require('./services/servicesUsingMongoose/database/mongoose')
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');

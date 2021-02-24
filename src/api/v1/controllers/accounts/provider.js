@@ -1,4 +1,4 @@
-const ProviderAccountServices = require('../../../../services/accounts/ProviderAccountServices');
+const ProviderAccountServices = require('../../../../services/servicesUsingMongoose/accounts/ProviderAccountServices');
 
 function userAccounts(router) {
     const providerAccountServices = new ProviderAccountServices();
