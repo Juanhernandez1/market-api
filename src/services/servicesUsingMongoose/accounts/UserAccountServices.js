@@ -23,7 +23,7 @@ class UserAccountServices {
 
         try {
             const data = await _user.save({timestamps:true, validateBeforeSave:true});
-            eventEmitter.emit('signup',data);
+            eventEmitter.emit('signup-users',data);
             return {
                 status: 201,
                 data,

@@ -5,7 +5,7 @@ const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
 mailSubscriber(eventEmitter);
 
-class UserAccountServices {
+class ProviderAccountServices {
     constructor() { }
 
     async signUp({user}) {
@@ -26,7 +26,7 @@ class UserAccountServices {
 
         try {
             const data = await _user.save({timestamps:true, validateBeforeSave:true});
-            eventEmitter.emit('signup',data);
+            eventEmitter.emit('signup-providers',data);
             return {
                 status: 201,
                 data,
@@ -43,4 +43,4 @@ class UserAccountServices {
 
 }
 
-module.exports = UserAccountServices;
+module.exports = ProviderAccountServices;
