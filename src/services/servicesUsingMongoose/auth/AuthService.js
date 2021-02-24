@@ -10,7 +10,7 @@ class AuthService {
         const {email, password } = user;
         try {
             const findUser = await User.find({ email:email }).exec();
-            if (findUser[0].length === 0) {
+            if (findUser.length === 0) {
                 return {
                     status: 404,
                     success: false,

@@ -1,3 +1,4 @@
+const path = require('path');
 const GeneralAccountServices = require('../../../../services/servicesUsingMongoose/accounts/GeneralAccountServices');
 const resendCodeValidationRules = require('../../validators/accounts/resendCode');
 const validate = require('../../validators/validate');
@@ -43,7 +44,7 @@ function generalAccounts(router) {
         let token = req.params.token;
         let verify = await jwt.verifyToken(token);
         if (verify) {
-            return res.render('')
+            return res.sendFile(path.resolve(__dirname, "../../../../../views/resetPsw.html"));
         }
 
         return res.status(401).json( {
