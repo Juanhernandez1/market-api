@@ -2,19 +2,19 @@ const {transport} = require('../../config/email/index');
 const {sendCodeForVerifyEmail, sendLinkForResetPassword} = require('../../services/notifications/emailNotification');
 
 function mailSubscriber(myEmitter) {
-    myEmitter.on('signup-providers',  function (data) {  // event listener
+    myEmitter.once('signup-providers',  function (data) {  // event listener
         sendCodeForVerifyEmail(transport, data).catch(console.error);
     })
 
-    myEmitter.on('signup-users',  function (data) {  // event listener
+    myEmitter.once('signup-users',  function (data) {  // event listener
         sendCodeForVerifyEmail(transport, data).catch(console.error);
     })
 
-    myEmitter.on('resend-code', function (data) {
+    myEmitter.once('resend-code', function (data) {
         sendCodeForVerifyEmail(transport, data).catch(console.error);;
     })
 
-    myEmitter.on('remember-psw', function (data) {
+    myEmitter.once('remember-psw', function (data) {
         sendLinkForResetPassword(transport, data).catch(console.error);
     });
 }

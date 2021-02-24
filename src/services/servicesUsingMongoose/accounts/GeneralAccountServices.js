@@ -1,11 +1,11 @@
 const User = require('../../../models/mongoose/user');
-const eventEmitter = require('../../../scripts/utils/events');
+const Event = require('../../../config/event/Event');
 const jwt = require('../../../scripts/utils/jwt');
 const {saveToken } = require('../auth/SecurityTokenServices');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
-mailSubscriber(eventEmitter);
+//mailSubscriber(Event.instance.emitter);
 
 
 class GeneralAccountServices {
@@ -33,7 +33,7 @@ class GeneralAccountServices {
             }
 
             const updateUser = await User.findByIdAndUpdate(findUser[0].id, {code_to_verify_email: code, send_at: calculateDate.toString()}, {new: true})
-            eventEmitter.emit('resend-code',updateUser);
+            Event.instance.emitter.emit('resend-code',updateUser);
 
             return {
                 status: 200,
@@ -68,7 +68,7 @@ class GeneralAccountServices {
                 }
             }
 
-            eventEmitter.emit('remember-psw',findUser[0]);
+            Event.instance.emitter.emit('remember-psw',findUser[0]);
 
             return {
                 status: 200,

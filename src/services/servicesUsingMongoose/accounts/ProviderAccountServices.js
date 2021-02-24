@@ -1,9 +1,9 @@
 const User = require('../../../models/mongoose/user');
 const hasPassword = require('../../../scripts/utils/hasPassword');
-const eventEmitter = require('../../../scripts/utils/events');
+const Event = require('../../../config/event/Event');
 const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
-mailSubscriber(eventEmitter);
+mailSubscriber(Event.instance.emitter);
 
 class ProviderAccountServices {
     constructor() { }
@@ -26,7 +26,7 @@ class ProviderAccountServices {
 
         try {
             const data = await _user.save({timestamps:true, validateBeforeSave:true});
-            eventEmitter.emit('signup-providers',data);
+            Event.instance.emitter.emit('signup-providers',data);
             return {
                 status: 201,
                 data,
