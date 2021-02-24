@@ -12,7 +12,6 @@ function authApi(router) {
     router.post('/accounts/login',[loginValidationRules()], validate , async function (req, res) {
         let {body: user} = req
         const data = await authService.login({user});
-        console.log(data)
 
         if (data.success) {
             const jsonUser = await getJsonUser(data.data.user);

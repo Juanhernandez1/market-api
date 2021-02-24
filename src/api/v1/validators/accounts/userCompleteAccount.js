@@ -9,11 +9,11 @@ const userCompleteAccountValidationRules = () => {
             .isLength({min: 10}).withMessage('El nit debe tener al menos 10 caracteres')
             .custom((value) => {
         return User.findOne({nit: value }).then(user => {
-            if (user) {
-                return Promise.reject('El nit ya existe !');
-            }
+                if (user) {
+                    return Promise.reject('El nit ya existe !');
+                }
+            })
         })
-    })
     ]
 }
 

@@ -1,8 +1,10 @@
 const path = require('path');
+const {getJsonUser} = require('../../../../scripts/utils/returnJsonEntities');
 const GeneralAccountServices = require('../../../../services/servicesUsingMongoose/accounts/GeneralAccountServices');
 const resendCodeValidationRules = require('../../validators/accounts/resendCode');
 const validate = require('../../validators/validate');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
+const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const jwt = require('../../../../scripts/utils/jwt');
 
 function generalAccounts(router) {
@@ -26,7 +28,6 @@ function generalAccounts(router) {
     router.post('/accounts/remember-password',[resendCodeValidationRules()],validate, async function (req, res) {
         const {body: user } = req;
         const { data, success, status } = await generalAccountServices.rememberPassword({user});
-
         if (success) {
             return res.status(status).json({
                 success: true,
@@ -75,5 +76,24 @@ function generalAccounts(router) {
             message: "El link para cambiar la contraseña a expirado"
         })
     })
+
+    router.post('/accounts/verify-emails',[confirmAccountValidationRules()], validate, async function (req, res) {
+        const {body: user } = req;
+        const { data, success, status } = await generalAccountServices.verifyEmail({user});
+        if (success) {
+            const jsonUser = await getJsonUser(data.user);
+            return res.status(status)
+                .json({
+                    success: true,
+                    user: jsonUser,
+                    token: data.token
+                })
+        }
+        return res.status(status).json({
+            success: false,
+            message: data
+        })
+    });
+
 }
 module.exports = generalAccounts;
