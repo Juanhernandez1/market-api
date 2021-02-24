@@ -1,7 +1,6 @@
 const {getJsonUser} = require('../../../../scripts/utils/returnJsonEntities');
 const ProviderAccountServices = require('../../../../services/servicesUsingMongoose/accounts/ProviderAccountServices');
 const signUpProviderValidationRules = require('../../validators/accounts/signUpProvider');
-const authVerify = require('../../middleware/authVerify');
 const validate = require('../../validators/validate');
 
 function userAccounts(router) {
@@ -22,10 +21,6 @@ function userAccounts(router) {
             success,
             data
         });
-    });
-
-    router.put('/accounts/providers/reset-password', async function (req, res) {
-
     });
 }
 module.exports = userAccounts;

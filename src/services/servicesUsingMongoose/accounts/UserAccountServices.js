@@ -3,19 +3,18 @@ const hasPassword = require('../../../scripts/utils/hasPassword');
 const Event = require('../../../config/event/Event');
 const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
-//mailSubscriber(Event.instance.emitter);
+mailSubscriber(Event.instance.emitter);
 
 class UserAccountServices {
     constructor() {}
 
     async signUp({user}) {
-        const {email, password, name } = user;
-        const hashedPassword = await hasPassword.hash(password);
+        const hashedPassword = await hasPassword.hash(user.password);
         const {code, calculateDate} = await generateCode(5);
 
         const _user = new User( {
-            name: name,
-            email: email,
+            name: user.name,
+            email: user.email,
             password: hashedPassword,
             code_to_verify_email: code,
             send_at: calculateDate.toString()
@@ -39,9 +38,8 @@ class UserAccountServices {
     }
 
     async completeAccount(user, user_id) {
-        const {address, phones, coordinates, nit} = user;
         try {
-            const findUser = await User.findByIdAndUpdate(user_id,{address: address, nit: nit, phones: phones, coordinates: coordinates }, {new: true})
+            const findUser = await User.findByIdAndUpdate(user_id,{address: user.address, nit: user.nit, phones: user.phones, coordinates: user.coordinates }, {new: true})
             if(findUser) {
                 return {
                     status: 200,
@@ -59,6 +57,31 @@ class UserAccountServices {
                 status: 500,
                 success: false,
                 data: err.message,
+            }
+        }
+    }
+
+    async updateProfile(user, user_id) {
+        try {
+            const _user = await User.findByIdAndUpdate(user_id,{
+                name: user.name,
+                email: user.email,
+                nit: user.nit,
+                address: user.address,
+                phones: user.phones,
+                coordinates: user.coordinates
+            },{new: true});
+
+            return  {
+                status: 200,
+                success:true,
+                data: _user
+            }
+        }catch (err) {
+            return  {
+                status: 200,
+                success:true,
+                data: user
             }
         }
     }

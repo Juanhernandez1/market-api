@@ -6,6 +6,7 @@ const validate = require('../../validators/validate');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
 const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const jwt = require('../../../../scripts/utils/jwt');
+const authVerify = require('../../middleware/authVerify');
 
 function generalAccounts(router) {
     const generalAccountServices = new GeneralAccountServices();
@@ -59,7 +60,7 @@ function generalAccounts(router) {
         let {body } = req;
         let verify = await jwt.verifyToken(token);
         if (verify) {
-            const {data, success, status} = await generalAccountServices.updatePassword(token, body.password);
+            const {data, success, status} = await generalAccountServices.updatePasswordForgotten(token, body.password);
             if (success) {
                 return res.status(status).json({
                     success: true,
@@ -93,6 +94,23 @@ function generalAccounts(router) {
             success: false,
             message: data
         })
+    });
+
+    router.put('/accounts/reset-password',confirmPasswordValidationRules(), [authVerify, validate], async function (req, res) {
+        const user_id = req.user._id;
+        const {body: user} = req;
+        const {data, success, status} = await generalAccountServices.resetPassword(user, user_id);
+        if (success) {
+            return res.json({
+                success,
+                message: data
+            })
+        }
+        return res.status(status).json( {
+            success,
+            data
+        })
+
     });
 
 }

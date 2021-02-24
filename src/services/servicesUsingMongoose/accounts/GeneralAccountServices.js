@@ -5,7 +5,7 @@ const {saveToken } = require('../auth/SecurityTokenServices');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
-//mailSubscriber(Event.instance.emitter);
+mailSubscriber(Event.instance.emitter);
 
 
 class GeneralAccountServices {
@@ -84,7 +84,7 @@ class GeneralAccountServices {
         }
     }
 
-    async updatePassword(token,password) {
+    async updatePasswordForgotten(token,password) {
         const {user} = await jwt.decodePayload(token);
         try{
             const findUser = await User.findById(user.id).exec();
@@ -155,6 +155,26 @@ class GeneralAccountServices {
             }
         }
     }
+
+    async resetPassword(user, user_id) {
+        try {
+            const hashedPassword = await hasPassword.hash(user.password);
+            const findUser = await User.findByIdAndUpdate(user_id,{ password: hashedPassword }, {new : true});
+            return {
+                status: 200,
+                success: true,
+                data: "La contraseña fue modificada !"
+            }
+        }catch (err) {
+            return {
+                status: 500,
+                success: false,
+                data: err
+            }
+        }
+
+    }
+
 }
 
 module.exports = GeneralAccountServices;

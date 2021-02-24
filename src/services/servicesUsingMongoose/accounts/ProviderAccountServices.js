@@ -15,13 +15,14 @@ class ProviderAccountServices {
         const _user = new User( {
             address: user.address,
             phones: user.phones,
-            nit: user.nice,
+            nit: user.nit,
             coordinates: user.coordinates,
             name: user.name,
             email: user.email,
             password: hashedPassword,
             code_to_verify_email: code,
-            send_at: calculateDate.toString()
+            send_at: calculateDate.toString(),
+            role: "provider"
         });
 
         try {
