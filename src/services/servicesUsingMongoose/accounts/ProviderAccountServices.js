@@ -1,7 +1,7 @@
 const User = require('../../../models/mongoose/user');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const Event = require('../../../config/event/Event');
-const mailSubscriber = require('../../../subscribers/user/mail');
+const mailSubscriber = require('../../../subscribers/user/sendCodeToEmailProviders');
 const generateCode = require('../../../scripts/codeEmailVerify');
 mailSubscriber(Event.instance.emitter);
 
@@ -38,6 +38,33 @@ class ProviderAccountServices {
                 status: 500,
                 data: err,
                 success: false
+            }
+        }
+    }
+
+    async updateProfile(user, user_id) {
+        try {
+            const _user = await User.findByIdAndUpdate(user_id,{
+                name: user.name,
+                email: user.email,
+                nit: user.nit,
+                address: user.address,
+                phones: user.phones,
+                coordinates: user.coordinates,
+                cost_of_shipping: user.cost_of_shipping,
+                delivery_business_days: user.delivery_business_days
+            },{new: true});
+
+            return {
+                status: 200,
+                success: true,
+                data: _user
+            }
+        }catch (err) {
+            return  {
+                status: 200,
+                success:true,
+                data: user
             }
         }
     }

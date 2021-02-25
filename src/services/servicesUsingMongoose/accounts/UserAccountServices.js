@@ -1,7 +1,7 @@
 const User = require('../../../models/mongoose/user');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const Event = require('../../../config/event/Event');
-const mailSubscriber = require('../../../subscribers/user/mail');
+const mailSubscriber = require('../../../subscribers/user/sendCodeToEmailUser');
 const generateCode = require('../../../scripts/codeEmailVerify');
 mailSubscriber(Event.instance.emitter);
 

@@ -1,5 +1,5 @@
 const {getJsonUser} = require('../../../../scripts/utils/returnJsonEntities');
-const AuthService = require('../../../../services/servicesUsingMongoose/auth/AuthService');
+const AuthService = require('../../../../services/servicesUsingMongoose/auth/AuthServices');
 const loginValidationRules = require('../../validators/auth/login');
 const validate = require('../../validators/validate');
 const {invalidToken, saveToken} = require('../../../../services/servicesUsingMongoose/auth/SecurityTokenServices');

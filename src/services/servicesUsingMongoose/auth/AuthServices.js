@@ -3,7 +3,7 @@ const jwt = require('../../../scripts/utils/jwt');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const {saveToken } = require('./SecurityTokenServices');
 
-class AuthService {
+class AuthServices {
     constructor() {}
 
     async login({user}) {
@@ -56,4 +56,4 @@ class AuthService {
     }
 }
 
-module.exports = AuthService;
+module.exports = AuthServices;

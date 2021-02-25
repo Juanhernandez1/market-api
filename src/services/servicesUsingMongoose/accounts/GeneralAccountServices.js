@@ -3,10 +3,11 @@ const Event = require('../../../config/event/Event');
 const jwt = require('../../../scripts/utils/jwt');
 const {saveToken } = require('../auth/SecurityTokenServices');
 const hasPassword = require('../../../scripts/utils/hasPassword');
-const mailSubscriber = require('../../../subscribers/user/mail');
 const generateCode = require('../../../scripts/codeEmailVerify');
-mailSubscriber(Event.instance.emitter);
-
+const resendCodeToEmailSubscriber = require('../../../subscribers/user/resendCodeToEmail');
+const sendLinkToResetPwsSubscriber = require('../../../subscribers/user/sendLinkToResetPws');
+resendCodeToEmailSubscriber(Event.instance.emitter);
+sendLinkToResetPwsSubscriber(Event.instance.emitter);
 
 class GeneralAccountServices {
     constructor() {}

@@ -58,6 +58,14 @@ let userSchema = new Schema({
         },
         enum: userRoles
     },
+    cost_of_shipping:{
+        type: String,
+        default: '0.00'
+    },
+    delivery_business_days:{
+        type: Number,
+        default: 2
+    },
     code_to_verify_email: {
         type: String
     },

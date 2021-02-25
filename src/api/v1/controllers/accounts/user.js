@@ -5,6 +5,7 @@ const signUpUserValidationRules  = require('../../validators/accounts/signUpUser
 const userCompleteAccountValidationRules = require('../../validators/accounts/userCompleteAccount');
 const updateProfileUserValidationRules = require('../../validators/accounts/updateProfileUser');
 const authVerify = require('../../middleware/authVerify');
+const isUser = require('../../middleware/isUser');
 
 function userAccounts(router) {
     const userAccountServices = new UserAccountServices();
@@ -26,7 +27,7 @@ function userAccounts(router) {
         });
     });
 
-    router.put('/accounts/users/complete-accounts',[userCompleteAccountValidationRules()],[authVerify,validate], async function(req, res) {
+    router.put('/accounts/users/complete-accounts',[userCompleteAccountValidationRules()],[authVerify,isUser,validate], async function(req, res) {
         const {body: user} = req;
         const user_id = req.user._id;
         const {data, success, status} = await userAccountServices.completeAccount(user,user_id);
@@ -43,9 +44,16 @@ function userAccounts(router) {
         });
     })
 
-    router.put('/accounts/users/profiles/update/:user_id',updateProfileUserValidationRules(),[authVerify,validate], async function (req, res) {
+    router.put('/accounts/users/profiles/update/:user_id',updateProfileUserValidationRules(),[authVerify,isUser,validate], async function (req, res) {
         const {body: user} = req;
         const user_id = req.params.user_id;
+
+        if (req.user._id !== user_id) {
+            return res.status(404).json({
+                success: false,
+                message: "Cuenta no encontrada",
+            });
+        }
         const {data, success, status } = await userAccountServices.updateProfile(user,user_id);
         if (success) {
             const jsonUser = await getJsonUser(data);
@@ -60,5 +68,6 @@ function userAccounts(router) {
             message: data,
         });
     })
+
 }
 module.exports = userAccounts;

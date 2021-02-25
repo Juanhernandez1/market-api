@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 const User = require('../../../../models/mongoose/user');
 
 const signUpProviderValidationRules = () => {
@@ -33,7 +33,6 @@ const signUpProviderValidationRules = () => {
             }
             return true;
         }),
-
     ]
 }
 
