@@ -17,6 +17,13 @@ class AuthService {
                     message: "Credenciales incorrectas"
                 }
             }
+            if (findUser[0].is_email_verified === false) {
+                return {
+                    status: 401,
+                    success: false,
+                    message: "La cuenta no esta verificada !"
+                }
+            }
             const isSame = await hasPassword.isSame(password, findUser[0].password);
 
             if(!isSame) {

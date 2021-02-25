@@ -1,5 +1,5 @@
 const {transport} = require('../../config/email/index');
-const {sendCodeForVerifyEmail, sendLinkForResetPassword} = require('../../services/notifications/emailNotification');
+const {sendCodeForVerifyEmail} = require('../../services/notifications/emailNotification');
 
 function sendEmailProviders(myEmitter) {
     myEmitter.once('signup-providers',  function (data) {  // event listener
