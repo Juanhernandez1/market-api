@@ -33,7 +33,6 @@ async function sendLinkForResetPassword(transport, data) {
     console.log("Email sent" + info.messageId);
 }
 
-
 module.exports = {
     sendCodeForVerifyEmail,
     sendLinkForResetPassword

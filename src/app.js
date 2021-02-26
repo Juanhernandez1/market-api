@@ -18,7 +18,7 @@ app.use('/api/v1/',routes);
 
 mongooseConnection(config);
 
-app.listen(config.app.port || 3000,() => {
+app.listen(config.app.port,() => {
     console.log(`Server ir running in port http://localhost:${config.app.port}`);
 });
 
