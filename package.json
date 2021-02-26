@@ -7,6 +7,9 @@
     "start": "node src/app.js",
     "test": "jest"
   },
+  "engines": {
+    "node": "14.16.0"
+  },
   "author": "jcorvera",
   "license": "MIT",
   "dependencies": {
