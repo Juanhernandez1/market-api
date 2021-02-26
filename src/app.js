@@ -15,6 +15,12 @@ app.use(cors());
 app.use(compression({ filter: shouldCompress }))
 
 app.use('/api/v1/',routes);
+const router = express.Router();
+router.get('/init',async function (req,res) {
+    res.json({
+        ok: true;
+    })
+})
 
 mongooseConnection(config);
 
