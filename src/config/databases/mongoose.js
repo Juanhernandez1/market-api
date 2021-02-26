@@ -1,5 +1,5 @@
 require('dotenv').config();
-const uri_mongodb = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+const uri_mongodb = process.env.MONGO_DB_URI;
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
