@@ -113,5 +113,8 @@ function generalAccounts(router) {
 
     });
 
+    router.post('/images/profile',[authVerify], async function (req, res) {
+
+    })
 }
 module.exports = generalAccounts;
