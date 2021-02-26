@@ -2,7 +2,7 @@
   "name": "market-api",
   "version": "1.0.0",
   "description": "Amazing project.",
-  "main": "./src/app.js",
+  "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "test": "jest"
