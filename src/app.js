@@ -18,8 +18,11 @@ app.use('/api/v1/',routes);
 
 mongooseConnection(config);
 
-app.listen(config.app.port || 8080,() => {
-    console.log(`Server ir running in port http://localhost:${config.app.port}`);
+app.listen(config.app.port || 8080,(err, sucess) => {
+    if (err) {
+        console.log("Error " + err)
+    }
+    console.log(`Server ir running ${sucess}`);
 });
 
 function shouldCompress (req, res) {
