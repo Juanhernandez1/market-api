@@ -10,7 +10,7 @@ let userRoles = {
 let userSchema = new Schema({
     avatar: {
         type: String,
-        default: null
+        default: "https://market-api-jc.s3.us-east-2.amazonaws.com/users/default-picture.png"
     },
     email:{
         type: String,
