@@ -18,9 +18,9 @@ app.use('/api/v1/',routes);
 const router = express.Router();
 router.get('/init',async function (req,res) {
     res.json({
-        ok: true;
+        ok: true
     })
-})
+});
 
 mongooseConnection(config);
 
