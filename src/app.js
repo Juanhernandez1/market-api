@@ -18,7 +18,7 @@ app.use('/api/v1/',routes);
 
 mongooseConnection(config);
 
-app.listen(config.app.port || 8080,(err, sucess) => {
+app.listen(process.env.PORT || 3333,(err, sucess) => {
     if (err) {
         console.log("Error " + err)
     }
