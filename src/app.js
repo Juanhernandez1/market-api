@@ -1,7 +1,7 @@
 const config = require('./config/index');
 //const compression = require('compression');
 const mongooseConnection = require('./services/servicesUsingMongoose/database/mongoose')
-const cors = require('cors');
+//const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./api/v1/controllers/index');
@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-app.use(cors());
+//app.use(cors());
 //app.use(compression({ filter: shouldCompress }))
 
 app.use('/api/v1/',routes);
