@@ -1,22 +1,14 @@
 {
-  "name": "survey-api",
+  "name": "market-api",
   "version": "1.0.0",
-  "description": "This is an API for create surveys and view its results. And is an exercise for backend interviews at Eaze.",
+  "description": "Amazing project.",
   "main": "./src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jcorvera/survey-api.git"
-  },
   "author": "jcorvera",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jcorvera/survey-api/issues"
-  },
-  "homepage": "https://github.com/jcorvera/survey-api#readme",
   "dependencies": {
     "aws-sdk": "^2.852.0",
     "bcrypt": "^5.0.0",
