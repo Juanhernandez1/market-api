@@ -22,7 +22,7 @@ async function sendLinkForResetPassword(transport, data) {
     }
     let token = await jwt.createToken(payload);
     let info = await transport.sendMail({
-        from: '"no reply 👻" <noreply@gmail.com>',
+        from: '"no reply 👻" <noreply@market_api.com>',
         to: data.email,
         subject: "Confirmar cuenta ✔",
         text: "Hola  "+ data.name +" !",
