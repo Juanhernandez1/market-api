@@ -1,7 +1,8 @@
-const AuthService = require('../../../../services/auth/AuthService');
+const {getJsonUser} = require('../../../../scripts/utils/returnJsonEntities');
+const AuthService = require('../../../../services/servicesUsingMongoose/auth/AuthServices');
 const loginValidationRules = require('../../validators/auth/login');
 const validate = require('../../validators/validate');
-const {invalidToken} = require('../../../../services/auth/SecurityTokenServices');
+const {invalidToken, saveToken} = require('../../../../services/servicesUsingMongoose/auth/SecurityTokenServices');
 const jwt = require('../../../../scripts/utils/jwt');
 const authVerify = require('../../middleware/authVerify');
 
@@ -13,10 +14,12 @@ function authApi(router) {
         const data = await authService.login({user});
 
         if (data.success) {
+            const jsonUser = await getJsonUser(data.data.user);
+            const _user = data.data.user;
             return res.status(data.status)
                 .json({
                     success: true,
-                    user: data.data.user,
+                    user: jsonUser,
                     token: data.data.token
                 })
         }
@@ -43,7 +46,17 @@ function authApi(router) {
     });
 
     router.get('/accounts/refresh-token', authVerify, async function (req, res) {
-
+        let _token = req.get('Authorization').split(' ');
+        const jsonUser = await getJsonUser(req.user);
+        const token = await jwt.createToken({user: req.user });
+        const result = await saveToken(token,jsonUser.id);
+        const invalidateToken = await invalidToken(_token[1]);
+        return res
+            .json({
+                success: true,
+                user: jsonUser,
+                token: token
+            })
     })
 }
 

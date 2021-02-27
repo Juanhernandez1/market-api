@@ -10,6 +10,7 @@ let userRoles = {
 let userSchema = new Schema({
     avatar: {
         type: String,
+        default: "https://market-api-jc.s3.us-east-2.amazonaws.com/users/default-picture.png"
     },
     email:{
         type: String,
@@ -31,17 +32,20 @@ let userSchema = new Schema({
         required: [true, "Password is required !"]
     },
     address: {
-        type: String
+        type: String,
+        default: null
     },
     nit:  {
         type: String,
-        unique: true,
+        default:  null
     },
     phones: {
         type: String,
+        default: null
     },
     coordinates: {
         type: String,
+        default: null
     },
     role: {
         type: String,
@@ -54,21 +58,29 @@ let userSchema = new Schema({
         },
         enum: userRoles
     },
+    cost_of_shipping:{
+        type: String,
+        default: '0.00'
+    },
+    delivery_business_days:{
+        type: Number,
+        default: 2
+    },
     code_to_verify_email: {
         type: String
     },
     send_at :{
         type: String
     },
-    email_verified:{
+    is_email_verified:{
         type: Boolean,
         default: false,
     },
-    status:{
+    is_active:{
         type: Boolean,
         default: true
     },
-    oauth2:{
+    is_oauth2:{
         type: Boolean,
         default: false
     }

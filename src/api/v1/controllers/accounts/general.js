@@ -1,27 +1,15 @@
-const GeneralAccountServices = require('../../../../services/accounts/GeneralAccountServices');
+const path = require('path');
+const {getJsonUser} = require('../../../../scripts/utils/returnJsonEntities');
+const GeneralAccountServices = require('../../../../services/servicesUsingMongoose/accounts/GeneralAccountServices');
 const resendCodeValidationRules = require('../../validators/accounts/resendCode');
 const validate = require('../../validators/validate');
-const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
+const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const jwt = require('../../../../scripts/utils/jwt');
+const authVerify = require('../../middleware/authVerify');
 
 function generalAccounts(router) {
     const generalAccountServices = new GeneralAccountServices();
-
-    router.post('/accounts/verify-emails',[confirmAccountValidationRules()], validate,async function (req, res) {
-        const {body: user } = req;
-        const { data, success, status } = await generalAccountServices.verifyEmail({user});
-        if (success) {
-            return res.status(status).json({
-                success: true,
-                message: data
-            })
-        }
-        return res.status(status).json({
-            success: false,
-            message: data
-        })
-    });
 
     router.post('/accounts/resend-code',[resendCodeValidationRules()],validate, async function(req, res) {
         const {body: user } = req;
@@ -41,7 +29,6 @@ function generalAccounts(router) {
     router.post('/accounts/remember-password',[resendCodeValidationRules()],validate, async function (req, res) {
         const {body: user } = req;
         const { data, success, status } = await generalAccountServices.rememberPassword({user});
-
         if (success) {
             return res.status(status).json({
                 success: true,
@@ -59,10 +46,7 @@ function generalAccounts(router) {
         let token = req.params.token;
         let verify = await jwt.verifyToken(token);
         if (verify) {
-            return res.status(200).json({
-                success: true,
-                message: "Token valido",
-            })
+            return res.sendFile(path.resolve(__dirname, "../../../../../views/resetPsw.html"));
         }
 
         return res.status(401).json( {
@@ -76,7 +60,7 @@ function generalAccounts(router) {
         let {body } = req;
         let verify = await jwt.verifyToken(token);
         if (verify) {
-            const {data, success, status} = await generalAccountServices.updatePassword(token, body.password);
+            const {data, success, status} = await generalAccountServices.updatePasswordForgotten(token, body.password);
             if (success) {
                 return res.status(status).json({
                     success: true,
@@ -92,6 +76,45 @@ function generalAccounts(router) {
             success: false,
             message: "El link para cambiar la contraseña a expirado"
         })
+    })
+
+    router.post('/accounts/verify-emails',[confirmAccountValidationRules()], validate, async function (req, res) {
+        const {body: user } = req;
+        const { data, success, status } = await generalAccountServices.verifyEmail({user});
+        if (success) {
+            const jsonUser = await getJsonUser(data.user);
+            return res.status(status)
+                .json({
+                    success: true,
+                    user: jsonUser,
+                    token: data.token
+                })
+        }
+        return res.status(status).json({
+            success: false,
+            message: data
+        })
+    });
+
+    router.put('/accounts/reset-password',confirmPasswordValidationRules(), [authVerify, validate], async function (req, res) {
+        const user_id = req.user._id;
+        const {body: user} = req;
+        const {data, success, status} = await generalAccountServices.resetPassword(user, user_id);
+        if (success) {
+            return res.json({
+                success,
+                message: data
+            })
+        }
+        return res.status(status).json( {
+            success,
+            data
+        })
+
+    });
+
+    router.post('/images/profile',[authVerify], async function (req, res) {
+
     })
 }
 module.exports = generalAccounts;

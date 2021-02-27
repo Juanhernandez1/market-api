@@ -1,6 +1,6 @@
 const config = require('./config/index');
 const compression = require('compression');
-const mongooseConnection = require('./services/database/mongoose')
+const mongooseConnection = require('./services/servicesUsingMongoose/database/mongoose')
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -18,8 +18,11 @@ app.use('/api/v1/',routes);
 
 mongooseConnection(config);
 
-app.listen(config.app.port || 3000,() => {
-    console.log(`Server ir running in port http://localhost:${config.app.port}`);
+app.listen(process.env.PORT || 3333,(err, sucess) => {
+    if (err) {
+        console.log("Error " + err)
+    }
+    console.log(`Server ir running ${sucess}`);
 });
 
 function shouldCompress (req, res) {

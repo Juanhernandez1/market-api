@@ -1,4 +1,4 @@
-const Security = require('../../models/mongoose/security');
+const Security = require('../../../models/mongoose/security');
 
 async function saveToken(token, user_id) {
     try {

@@ -1,3 +1,4 @@
+const config = require('../../config/index');
 const jwt = require('../../scripts/utils/jwt');
 
 async function sendCodeForVerifyEmail(transport, data) {
@@ -22,17 +23,16 @@ async function sendLinkForResetPassword(transport, data) {
     }
     let token = await jwt.createToken(payload);
     let info = await transport.sendMail({
-        from: '"no reply 👻" <noreply@gmail.com>',
+        from: '"no reply 👻" <noreply@market_api.com>',
         to: data.email,
         subject: "Confirmar cuenta ✔",
         text: "Hola  "+ data.name +" !",
         html: "<p>Por favor has clic sobre el siguiente link, para cambiar tu contraseña: " +
             "</p> " +
-            "<a href='http://localhost:3333/api/v1/accounts/reset-password/"+token+"'> Cambiar contraseña</a>",
+            "<a href='"+config.app.host+"/api/v1/accounts/reset-password/"+token+"'> Cambiar contraseña</a>",
     });
     console.log("Email sent" + info.messageId);
 }
-
 
 module.exports = {
     sendCodeForVerifyEmail,
