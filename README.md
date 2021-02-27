@@ -18,7 +18,7 @@ into three separate layers. This provides clarity about what responsibility/func
 Below show you, our effective project structure.
 
 ```
-node_modules
+DOCS -- insomnia file
 src
 └── app.js  -- app entry point
 └── /api    
@@ -32,6 +32,7 @@ src
         └── /utils
 └── /subscribers  -- async event handlers
 └── /test  -- test suites
+views -- view to reset password
 
 ```
 
@@ -40,7 +41,6 @@ src
 - Node.js 14.15.5 LTS
 - Express 
 - Mailtrap to test emails
-- Sparkpost to send emails
 - AWS S3 for save images
 - MongoDB with mongo Atlas to save user information
 - PostgreSQL fot save transactional information. 
