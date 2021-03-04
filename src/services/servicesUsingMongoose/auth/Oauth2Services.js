@@ -71,7 +71,7 @@ class Oauth2Services {
                 return {
                     status: 200,
                     success: true,
-                    data:{
+                    data: {
                         token,
                         dat: data
                     },
