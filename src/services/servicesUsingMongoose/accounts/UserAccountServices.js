@@ -56,7 +56,7 @@ class UserAccountServices {
             return {
                 status: 500,
                 success: false,
-                data: err.message,
+                data: err,
             }
         }
     }
@@ -79,9 +79,9 @@ class UserAccountServices {
             }
         }catch (err) {
             return  {
-                status: 200,
-                success:true,
-                data: user
+                status: 500,
+                success: false,
+                data: err
             }
         }
     }

@@ -41,7 +41,7 @@ class Oauth2Services {
 
     async signupOauth2(is_oauth2 , data) {
         const hashedPassword = await hasPassword.hash("thisIsAtestPassord");
-        //try {
+        try {
             if (!is_oauth2) {
                 const user = new User( {
                     avatar: data.avatar,
@@ -77,14 +77,14 @@ class Oauth2Services {
                     },
                     message: 'Logged in'
                 }
-            /*}catch (err) {
+            }catch (err) {
                 return {
                     status: 500,
                     success: false,
                     data: err,
                     message: "error"
                 }
-            }*/
+            }
         }
 }
 
