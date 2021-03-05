@@ -5,7 +5,12 @@ class ImageServices {
     }
     async uploadImage(params) {
         try {
-            const resp = s3.putObject(params)
+            s3.putObject(params, function (err, data) {
+                if (err) {
+                    return false
+                }
+                return true
+            });
             return true;
         }catch (err) {
             console.log(err);
