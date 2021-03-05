@@ -13,7 +13,7 @@
   "author": "jcorvera",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.852.0",
+    "aws-sdk": "^2.857.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
