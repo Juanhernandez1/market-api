@@ -6,6 +6,7 @@ const validate = require('../../validators/validate');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
 const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const jwt = require('../../../../scripts/utils/jwt');
+const URIForS3 = require('../../../../scripts/utils/URIForS3');
 const { isThereFile, validateExtensionFile } = require('../../validators/images/validateImage');
 const authVerify = require('../../middleware/authVerify');
 
@@ -122,9 +123,9 @@ function generalAccounts(router) {
 
         const params = {
             ContentType: req.files.image.mimetype,
-            Bucket:'market-api-jc/users',
+            Bucket:URIForS3.USERS_FOLDER,
             Key: user_id+"."+extension[1],
-            ACL: 'public-read',
+            ACL: URIForS3.ACL,
             Body: dataImage.image.data
         }
 
