@@ -19,7 +19,7 @@ class AuthServices {
             }
             if (findUser[0].is_email_verified === false) {
                 return {
-                    status: 401,
+                    status: 403,
                     success: false,
                     message: "La cuenta no esta verificada !"
                 }
