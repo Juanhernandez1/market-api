@@ -1,17 +1,20 @@
 const User = require('../../../models/mongoose/user');
 const Event = require('../../../config/event/Event');
 const jwt = require('../../../scripts/utils/jwt');
+const uriAws = require('../../../scripts/utils/URIForS3');
 const {saveToken } = require('../auth/SecurityTokenServices');
 const hasPassword = require('../../../scripts/utils/hasPassword');
 const generateCode = require('../../../scripts/codeEmailVerify');
+const ImageServices = require('../image/ImageServices');
 const resendCodeToEmailSubscriber = require('../../../subscribers/user/resendCodeToEmail');
 const sendLinkToResetPwsSubscriber = require('../../../subscribers/user/sendLinkToResetPws');
 resendCodeToEmailSubscriber(Event.instance.emitter);
 sendLinkToResetPwsSubscriber(Event.instance.emitter);
 
 class GeneralAccountServices {
-    constructor() {}
-
+    constructor() {
+        this.imageServices = new ImageServices();
+    }
     async resendCode({user}) {
         const {email } = user;
         const {code, calculateDate} = await generateCode(5);
@@ -174,6 +177,33 @@ class GeneralAccountServices {
             }
         }
 
+    }
+
+    async replaceImageProfile(params, user_id) {
+        try {
+            const imageWasUploaded = await this.imageServices.uploadImage(params);
+            if (imageWasUploaded) {
+                const uri = uriAws.URI_USERS+params.Key;
+                const findUser = await  User.findByIdAndUpdate(user_id, {avatar: uri}, {new: true}).exec()
+                return {
+                    status: 200,
+                    success: true,
+                    user: findUser
+                }
+            } else  {
+                return {
+                    status: 500,
+                    success: false,
+                    user: null,
+                }
+            }
+        }catch(err) {
+            return {
+                status: 500,
+                success: false,
+                user: null,
+            }
+        }
     }
 
 }

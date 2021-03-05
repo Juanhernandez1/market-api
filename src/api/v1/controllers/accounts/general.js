@@ -6,6 +6,7 @@ const validate = require('../../validators/validate');
 const confirmPasswordValidationRules = require('../../validators/accounts/confirmPassword');
 const confirmAccountValidationRules = require('../../validators/accounts/confirmAccount');
 const jwt = require('../../../../scripts/utils/jwt');
+const { isThereFile, validateExtensionFile } = require('../../validators/images/validateImage');
 const authVerify = require('../../middleware/authVerify');
 
 function generalAccounts(router) {
@@ -113,8 +114,32 @@ function generalAccounts(router) {
 
     });
 
-    router.post('/images/profile',[authVerify], async function (req, res) {
+    router.put('/images/profile',[authVerify, isThereFile, validateExtensionFile], async function (req, res) {
+        const extension = req.files.image.name.split('.');
+        const user_id = req.user._id;
+        const imageName= user_id+"."+extension[1]
+        const dataImage = req.files
 
+        const params = {
+            ContentType: req.files.image.mimetype,
+            Bucket:'market-api-jc/users',
+            Key: user_id+"."+extension[1],
+            ACL: 'public-read',
+            Body: dataImage.image.data
+        }
+
+        const {status, success, user} = await generalAccountServices.replaceImageProfile(params, user_id);
+        if (success) {
+            const jsonUser = await getJsonUser(user);
+            return res.json({
+                success,
+                user: jsonUser
+            })
+        }
+        return res.status(status).json({
+            success,
+            user
+        })
     })
 }
 module.exports = generalAccounts;
