@@ -1,4 +1,5 @@
 # Market API
+
 ## Layered Approach
 
 As we know there are many approaches for write clean code, for instance: clean architecture, hexagonal architecture, event-drive architecture and so on. However, in this case we are going to take a layer approach. This would, therefore, be a good place to implement the renowned **separation of concerns** programming principle (This).
@@ -11,9 +12,9 @@ These aspects can be handle by programing using three layers as below.
 
 <img width="568" alt="layared" src="https://user-images.githubusercontent.com/20213215/108635085-d24f2d80-7442-11eb-8da8-9acbeb4ee62e.png">
 
-
 ## Folder Structured.
-After describe our approach, we are going to modularize our project 
+
+After describe our approach, we are going to modularize our project
 into three separate layers. This provides clarity about what responsibility/functionality is managed.
 Below show you, our effective project structure.
 
@@ -21,7 +22,7 @@ Below show you, our effective project structure.
 DOCS -- insomnia file
 src
 └── app.js  -- app entry point
-└── /api    
+└── /api
         └── /Controllers
         └── /Validators
         └── /Middlewares
@@ -37,13 +38,14 @@ views -- view to reset password
 ```
 
 ## Technologies
+
 - Vanilla Javascript
 - Node.js 14.15.5 LTS
-- Express 
+- Express
 - Mailtrap to test emails
 - AWS S3 for save images
 - MongoDB with mongo Atlas to save user information
-- PostgreSQL fot save transactional information. 
+- PostgreSQL fot save transactional information.
 - Heroku to deploy project
 - Firebase to send notifications
 
@@ -54,7 +56,3 @@ Infrastructure in our project.
 ## Environment setup
 
 coming soon !
-
-
-
-

@@ -1,4 +1,5 @@
 const drivers = {
-    NODEMAILER: "nodemailer", SPARKPOST: "sparkpost"
-}
+  NODEMAILER: "nodemailer",
+  SPARKPOST: "sparkpost"
+};
 module.exports = drivers;

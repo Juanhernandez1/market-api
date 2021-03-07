@@ -17,7 +17,7 @@ class categories extends Sequelize.Model {
           type: DataTypes.STRING(255),
           allowNull: false
         },
-        delete_timestamp: {
+        delete_timetamp: {
           type: DataTypes.DATE,
           allowNull: true
         }
@@ -26,9 +26,9 @@ class categories extends Sequelize.Model {
         sequelize,
         tableName: "categories",
         schema: "public",
-        createdAt: false,
-        updatedAt: false,
-        deletedAt: "delete_timestamp",
+        timestamps: false,
+        paranoid: true,
+        deletedAt: "delete_timetamp",
         indexes: [
           {
             name: "categories_pkey",
@@ -42,20 +42,38 @@ class categories extends Sequelize.Model {
   }
 
   static Setting() {
+    // * objetos para comparacion
+    const Mapobjeto1 = { ...this.fieldAttributeMap };
+
+    // * Eliminados Campos
+    Object.keys(Mapobjeto1).forEach(key => {
+      if (
+        Mapobjeto1[key] === "Estado" ||
+        Mapobjeto1[key] === this.primaryKeyAttributes[0] ||
+        key.search("uid") === 0
+      ) {
+        delete Mapobjeto1[key];
+      }
+    });
+    // * lista de campos que permitiran busqueda por like
+    const whereLike = Object.values(Mapobjeto1);
     return {
       ConfigFindAll: (Op, param) => {
-        console.log(param === "ShowHidden");
+        let objconfig;
+        if (param === "ShowHidden") {
+          objconfig = { delete_timetamp: { [Op.not]: null } };
+        } else {
+          objconfig = { delete_timetamp: { [Op.is]: null } };
+        }
         return {
           raw: true,
           nest: true,
-          where: {
-            delete_timestamp: param === "ShowHidden" ? { [Op.not]: null } : { [Op.is]: null }
-          }
+          where: { ...objconfig }
         };
       },
 
       ConfigFindAllView: null,
-      whereLike: ["name_category"],
+      whereLike,
       FieldPk: this.primaryKeyAttributes[0]
     };
   }

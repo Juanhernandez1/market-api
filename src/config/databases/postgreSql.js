@@ -1,17 +1,17 @@
 class ConnectionDb {
-  static instance;
+  static #instance;
 
   constructor(Sequelize, Config, test) {
-    if (ConnectionDb.instance) {
-      return ConnectionDb.instance;
+    if (ConnectionDb.#instance) {
+      return ConnectionDb.#instance;
     }
-    this.InitializeConnectionDb(Sequelize, Config);
+    this._InitializeConnectionDb(Sequelize, Config);
     this.TestConnectionDb();
     this.state = test;
     ConnectionDb.instance = this;
   }
 
-  InitializeConnectionDb(Sequelize, Config) {
+  _InitializeConnectionDb(Sequelize, Config) {
     const { url, nombreDb, usuarioDb, claveDb, configuracionCnUrl, configuracionCnlocal } = Config;
 
     if (url != null) {

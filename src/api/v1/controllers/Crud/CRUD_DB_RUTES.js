@@ -12,10 +12,11 @@ function CRUD_DB_RUTES(router, index, Controller) {
 
   // * get
   router.get(`/${index}/GetAll`, GetAll);
-  router.get(`/${index}/:id`, SearchPk);
-  router.get(`/${index}/:dato`, SearchOne);
-  router.get(`/${index}/:dato`, SearchMany);
-  router.get(`/${index}/GetViewAll`, GetViewAll);
+  router.get(`/${index}/GetAll/:visibility`, GetAll);
+  router.get(`/${index}/SearchPk/:id`, SearchPk);
+  router.get(`/${index}/SearchOne/:dato`, SearchOne);
+  router.get(`/${index}/SearchMany/:dato`, SearchMany);
+  router.get(`/${index}/GetView`, GetViewAll);
   // * post
   router.post(`/${index}/Create`, Create);
   // * put

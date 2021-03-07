@@ -1,8 +1,6 @@
 const ErrorMessage = require("./ErrorMessage");
-const ChangeStatus = require("./ChangeStatus");
 const ConditionsOr = require("./ConditionsOr");
 const ValidateData = require("./ValidateData");
-const View = require("./View");
 
 class Controller {
   constructor(ObjectModel, Op) {
@@ -13,18 +11,16 @@ class Controller {
   GetAll = async (req, res) => {
     const { ER500, ERDB404 } = ErrorMessage;
 
-    const { condicion, include } = this.ObjectModel.Setting();
-
-    const { WhereStado } = condicion;
-    const { campoE, valor } = WhereStado;
+    const { ConfigFindAll } = this.ObjectModel.Setting();
 
     try {
-      const obj = ChangeStatus(req.params, campoE, valor, include);
-
-      const data = await this.ObjectModel.findAll(obj);
-
+      const { visibility } = req.params;
+      const objconfig = ConfigFindAll(this.Operations, `${visibility}`);
+      const data = await this.ObjectModel.findAll(objconfig);
+      console.log(data);
       ValidateData(data, res, 200, ERDB404);
     } catch (error) {
+      console.log(error);
       res.status(500).send(ER500);
     }
   };
@@ -32,19 +28,21 @@ class Controller {
   GetViewAll = async (req, res) => {
     const { ER500, ERDB404 } = ErrorMessage;
 
-    const { condicion, include } = this.ObjectModel.Setting();
-
-    const { WhereStado, Where } = condicion;
-    const { campoE, valor } = WhereStado;
+    const { ConfigFindAll, ConfigFindAllView } = this.ObjectModel.Setting();
 
     try {
-      const obj = ChangeStatus(req.params, campoE, valor, include);
+      const { visibility } = req.params;
 
-      const data = await this.ObjectModel.findAll(obj);
+      let objconfig;
 
-      const ObjetoView = View(data, Where, include);
+      if (ConfigFindAllView === null) {
+        objconfig = ConfigFindAll(this.Operations, visibility);
+      } else if (typeof ConfigFindAllView === "function") {
+        objconfig = ConfigFindAllView(this.Operations, visibility);
+      }
+      const data = await this.ObjectModel.findAll(objconfig);
 
-      ValidateData(ObjetoView, res, 200, ERDB404);
+      ValidateData(data, res, 200, ERDB404);
     } catch (error) {
       res.status(500).send(ER500);
     }
@@ -52,10 +50,12 @@ class Controller {
 
   SearchPk = async (req, res) => {
     const { ER500, ERDB02 } = ErrorMessage;
+    const { ConfigFindAll } = this.ObjectModel.Setting();
+
     try {
       const { id } = req.params;
 
-      const data = await this.ObjectModel.findByPk(id);
+      const data = await this.ObjectModel.findByPk(id, ConfigFindAll(this.Operations));
 
       ValidateData(data, res, 200, ERDB02);
     } catch (error) {
@@ -65,46 +65,46 @@ class Controller {
 
   SearchOne = async (req, res) => {
     const { ER500, ERDB404LIKE } = ErrorMessage;
-
-    const { condicion } = this.ObjectModel.Setting();
-
-    const { WhereLike, WhereStado } = condicion;
-    const { campoE, valor } = WhereStado;
+    const { ConfigFindAll, whereLike } = this.ObjectModel.Setting();
 
     try {
       const { dato } = req.params;
 
-      const busqueda = ConditionsOr(WhereLike, dato, this.Operaciones);
+      const busqueda = ConditionsOr(whereLike, dato, this.Operations);
+
+      const objconfig = ConfigFindAll(this.Operations);
 
       const data = await this.ObjectModel.findOne({
-        where: { [this.Operaciones.or]: busqueda, [campoE]: valor }
+        ...objconfig,
+        where: { [this.Operations.or]: busqueda, ...objconfig.where }
       });
 
       ValidateData(data, res, 200, ERDB404LIKE);
     } catch (error) {
+      console.log(error);
       res.status(500).send(ER500);
     }
   };
 
   SearchMany = async (req, res) => {
     const { ER500, ERDB404LIKE } = ErrorMessage;
-
-    const { condicion } = this.ObjectModel.Setting();
-
-    const { WhereLike, WhereStado } = condicion;
-    const { campoE, valor } = WhereStado;
+    const { ConfigFindAll, whereLike } = this.ObjectModel.Setting();
 
     try {
       const { dato } = req.params;
 
-      const busqueda = ConditionsOr(WhereLike, dato, this.Operaciones);
+      const busqueda = ConditionsOr(whereLike, dato, this.Operations);
+
+      const objconfig = ConfigFindAll(this.Operations);
 
       const data = await this.ObjectModel.findAll({
-        where: { [this.Operaciones.or]: busqueda, [campoE]: valor }
+        ...objconfig,
+        where: { [this.Operations.or]: busqueda, ...objconfig.where }
       });
 
       ValidateData(data, res, 200, ERDB404LIKE);
     } catch (error) {
+      console.log(error);
       res.status(500).send(ER500);
     }
   };
@@ -116,7 +116,7 @@ class Controller {
 
       const data = await this.ObjectModel.create(objBody);
 
-      ValidateData(data.dataValues, res, 200, ERDB404);
+      ValidateData(data.dataValues, res, 201, ERDB404);
     } catch (e) {
       if (e.parent.code === "23505") {
         res.status(406).send(ERDB01);
@@ -129,18 +129,18 @@ class Controller {
   Update = async (req, res) => {
     const { ERDB02, ERDB404 } = ErrorMessage;
 
-    const { campoPk } = this.ObjectModel.Setting();
+    const { FieldPk } = this.ObjectModel.Setting();
 
     try {
-      const id = req.body[campoPk];
-      delete req.body[campoPk];
+      const id = req.body[FieldPk];
+      delete req.body[FieldPk];
 
       const data = await this.ObjectModel.update(req.body, {
-        where: { [campoPk]: id }
+        where: { [FieldPk]: id }
       });
 
       if (data[0] === 1) {
-        ValidateData(data[0] === 1, res, 201, ERDB404);
+        ValidateData(data[0] === 1, res, 200, ERDB404);
       } else {
         res.status(404).send(ERDB02);
       }
@@ -150,39 +150,19 @@ class Controller {
   };
 
   Delete = async (req, res) => {
-    const { ER405, ERDB02, ERDB404 } = ErrorMessage;
-
-    const { campoPk, condicion } = this.ObjectModel.Setting();
-
-    const { WhereStado } = condicion;
-    const { campoE, deleteR } = WhereStado;
+    const { ERDB404 } = ErrorMessage;
+    const { FieldPk } = this.ObjectModel.Setting();
 
     try {
       const { id } = req.params;
 
-      if (this.ObjectModel.fieldAttributeMap.estado === campoE) {
-        const data = await this.ObjectModel.update(
-          { [campoE]: deleteR },
-          {
-            where: { [campoPk]: id }
-          }
-        );
+      const data = await this.ObjectModel.destroy({
+        where: { [FieldPk]: id }
+      });
 
-        if (data) {
-          ValidateData(data, res, 200, ERDB404);
-        } else {
-          res.status(404).send(ERDB02);
-        }
-      } else if (this.ObjectModel.fieldAttributeMap.id_test === campoPk) {
-        const data = await this.ObjectModel.destroy({
-          where: { [campoPk]: id }
-        });
-
-        ValidateData(data, res, 200, ERDB404);
-      } else {
-        res.status(405).send(ER405);
-      }
+      ValidateData(data, res, 202, ERDB404);
     } catch (e) {
+      console.log(e);
       res.status(500).send(e);
     }
   };
